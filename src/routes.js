@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import HelloController from './controllers/hello_controller.js';
+import QuestionController from './controllers/question_controller.js';
 
 const router = Router();
 
-router.get('/:name', HelloController.index);
+router.get('/questions', QuestionController.index);
 
 export default router;
