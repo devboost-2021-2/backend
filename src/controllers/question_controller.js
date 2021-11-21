@@ -4,7 +4,7 @@ class QuestionController {
   static question = new Question();
 
   static index(req, res) {
-    const allQuestions = question.findAll(90);
+    const allQuestions = QuestionController.question.findAll(90);
 
     return res.status(200).json({ allQuestions });
   }
