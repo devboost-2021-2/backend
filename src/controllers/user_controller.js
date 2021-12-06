@@ -1,3 +1,4 @@
+import { create } from '../services/user-service.js';
 class UserController {
   static list = [
     {
@@ -9,28 +10,14 @@ class UserController {
     },
   ];
   static create(req, res) {
-    const { username, password, realname, email, course } = req.body;
-    const has_user = UserController.list.find(
-      (user) => user.username === username || user.email === email
-    );
-    if (has_user) {
-      return res
-        .status(400)
-        .json({
-          message:
-            has_user.username === username
-              ? 'Usuário já existente'
-              : 'Email já existente',
-        });
+    try {
+      create(req.body, UserController.list);
+      return res.status(201).json({ message: 'Usuário criado com sucesso' });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message,
+      });
     }
-    UserController.list.push({
-      username,
-      password,
-      realname,
-      email,
-      course,
-    });
-    return res.status(201).json({ message: 'Usuário criado com sucesso' });
   }
 
   static login(req, res) {
