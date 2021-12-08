@@ -1,4 +1,4 @@
-function create({ username, password, realname, email, course }, list) {
+export function create({ username, password, realname, email, course }, list) {
   const has_user = list.find(
     (user) => user.username === username || user.email === email
   );
@@ -19,5 +19,3 @@ function create({ username, password, realname, email, course }, list) {
     course,
   });
 }
-
-module.exports = { create };

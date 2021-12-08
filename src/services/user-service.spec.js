@@ -1,7 +1,5 @@
-// import { describe, expect, it } from '@jest/globals';
-const { describe, expect, it } = require('@jest/globals');
-// import { create } from './user-service.js';
-const { create } = require('./user-service.js');
+import { describe, expect, it } from '@jest/globals';
+import { create } from './user-service.js';
 
 describe('User create', () => {
   describe('When user creation is successful', () => {
