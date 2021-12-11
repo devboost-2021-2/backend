@@ -1,26 +1,28 @@
+import { Question } from '../database/question.js';
+
 class QuestionController {
+  static question = new Question();
+
   static index(req, res) {
-    const alternatives = [
-      { id: "a", option: "Texto da alternativa A" },
-      { id: "b", option: "Texto da alternativa B" },
-      { id: "c", option: "Texto da alternativa C" },
-      { id: "d", option: "Texto da alternativa D" },
-    ];
-
-    const question = {
-      alternatives: alternatives,
-      number: -1,
-      statement: "Lorem ipsum",
-      exam: "FUVEST 2030",
-    };
-
-    const allQuestions = [];
-
-    for (let i = 0; i < 90; i++) {
-      allQuestions.push({ ...question, number: i + 1 });
-    }
+    const allQuestions = QuestionController.question.findAll(90);
 
     return res.status(200).json({ allQuestions });
+  }
+
+  static correctAnswers(req, res) {
+    const answersDict = req.body;
+    const keys = Object.keys(answersDict);
+    const correctedAnswers = {};
+    let numberOfCorrectAnswers = 0;
+
+    keys.forEach((key) => {
+      const question = QuestionController.question.findById(key);
+      correctedAnswers[key] = answersDict[key] === question.correctAnswer;
+
+      if (correctedAnswers[key]) numberOfCorrectAnswers++;
+    });
+
+    return res.status(200).json({ numberOfCorrectAnswers, correctedAnswers });
   }
 }
 
