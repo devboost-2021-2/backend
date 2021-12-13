@@ -1,4 +1,5 @@
-import { create } from '../services/user-service.js';
+import { InvalidPasswordError, UserNotFoundError } from '../errors.js';
+import { create, login } from '../services/user-service.js';
 class UserController {
   static list = [
     {
@@ -21,18 +22,21 @@ class UserController {
   }
 
   static login(req, res) {
-    const { user, password } = req.body;
-    const has_user = UserController.list.find(
-      (item) =>
-        (item.username === user || item.email === user) &&
-        item.password == password
-    );
-    if (!has_user) {
-      return res.status(404).json({ message: 'Usuário e/ou senha errados' });
+    try {
+      const user = login(req.body, UserController.list);
+      return res.status(200).json(user);
+    } catch (error) {
+      if (error instanceof InvalidPasswordError)
+        return res.status(401).json({
+          message: error.message,
+        });
+
+      if (error instanceof UserNotFoundError) {
+        return res.status(404).json({
+          message: error.message,
+        });
+      }
     }
-    const response = Object.assign({}, has_user);
-    delete response.password;
-    return res.status(200).json(response);
   }
 }
 
